@@ -10,15 +10,15 @@ class RepeatRecentSkill(MycroftSkill):
         self.last_stt_time = 0
 
     def initialize(self):
-        def on_utterance(_, message):
+        def on_utterance(message):
             self.last_stt = message.data['utterances'][0]
             self.last_stt_time = monotonic()
 
-        def on_speak(_, message):
+        def on_speak(message):
             self.last_tts = message.data['utterance']
 
-        self.add_event('recognizer_loop:utterance', on_utterance, need_self=True)
-        self.add_event('speak', on_speak, need_self=True)
+        self.add_event('recognizer_loop:utterance', on_utterance)
+        self.add_event('speak', on_speak)
         self.last_stt = self.last_tts = self.translate('nothing')
 
     @intent_file_handler('repeat.tts.intent')
