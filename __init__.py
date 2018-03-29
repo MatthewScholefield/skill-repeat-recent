@@ -1,6 +1,7 @@
 from monotonic import monotonic
 
 from mycroft import MycroftSkill, intent_file_handler
+from mycroft.version import CORE_VERSION_TUPLE
 
 
 class RepeatRecentSkill(MycroftSkill):
@@ -17,8 +18,9 @@ class RepeatRecentSkill(MycroftSkill):
         def on_speak(message):
             self.last_tts = message.data['utterance']
 
-        self.add_event('recognizer_loop:utterance', on_utterance)
-        self.add_event('speak', on_speak)
+        if CORE_VERSION_TUPLE >= (18, 2, 1):
+            self.add_event('recognizer_loop:utterance', on_utterance)
+            self.add_event('speak', on_speak)
         self.last_stt = self.last_tts = self.translate('nothing')
 
     @intent_file_handler('repeat.tts.intent')
